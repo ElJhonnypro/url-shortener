@@ -1,0 +1,35 @@
+flowchart TD
+    client([Client Request])
+    server([Server])
+    db[(Database)]
+    vali([Validate random code
+     against database])
+    resp[Return Response]
+
+    err[Return Error]
+    server -->|Create random code | vali
+
+    vali -->|Invalid code| server
+    vali -->|Valid code| db
+
+    db -->|Return Error| err
+    err -->|Return error as response only if its an explainable error| resp
+    db -->|Return success| resp
+
+
+    http[HTTP Request]
+    postnew[POST /new]
+    getcode[GET /code/:code]
+    nserver([Server])
+    ndb[(Database)]
+    red([Redirect])
+
+    client --> http
+    http --> postnew
+    http --> getcode
+    postnew --> server
+    getcode --> nserver
+    nserver -->|Get URL from
+     database by :code| ndb
+    ndb -->|Return URL| red
+    red -->|Redirect to URL| client
