@@ -7,12 +7,12 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/ElJhonnypro/url-shortener-go/internal/handler"
-	"github.com/ElJhonnypro/url-shortener-go/internal/httprouter"
-	"github.com/ElJhonnypro/url-shortener-go/internal/logger"
-	"github.com/ElJhonnypro/url-shortener-go/internal/middleware"
-	"github.com/ElJhonnypro/url-shortener-go/internal/repository"
-	"github.com/ElJhonnypro/url-shortener-go/internal/service"
+	"github.com/ElJhonnypro/url-shortener/internal/handler"
+	"github.com/ElJhonnypro/url-shortener/internal/httprouter"
+	"github.com/ElJhonnypro/url-shortener/internal/logger"
+	"github.com/ElJhonnypro/url-shortener/internal/middleware"
+	"github.com/ElJhonnypro/url-shortener/internal/repository"
+	"github.com/ElJhonnypro/url-shortener/internal/service"
 )
 
 func main() {
