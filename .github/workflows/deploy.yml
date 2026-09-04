@@ -10,12 +10,9 @@ jobs:
     runs-on: [Deployment]
 
     steps:
-      - name: Update repository
-        run: |
-          cd ~/Projects/url-shortener
-          git pull origin main
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Rebuild application
         run: |
-          cd ~/Projects/url-shortener
           docker compose up -d --build
