@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/ElJhonnypro/url-shortener-go/internal/logger"
-	"github.com/ElJhonnypro/url-shortener-go/internal/service"
+	"github.com/ElJhonnypro/url-shortener/internal/logger"
+	"github.com/ElJhonnypro/url-shortener/internal/service"
 )
 
 type URLHandler struct {
