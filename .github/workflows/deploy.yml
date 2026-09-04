@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-#UPDATE?
+
 jobs:
   deploy:
     runs-on: [Deployment]
@@ -12,6 +12,20 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Debug files
+        run: |
+          echo "=== PWD ==="
+          pwd
+
+          echo "=== COMMIT ==="
+          git rev-parse HEAD
+
+          echo "=== FILES ==="
+          find . -maxdepth 3 -type f | sort
+
+          echo "=== GO MOD ==="
+          cat go.mod
 
       - name: Rebuild application
         run: |
