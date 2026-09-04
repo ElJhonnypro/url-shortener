@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"math/big"
 	"net/http"
+	"net/url"
 
 	"github.com/ElJhonnypro/url-shortener-go/internal/logger"
 	"github.com/ElJhonnypro/url-shortener-go/internal/service"
@@ -38,6 +39,27 @@ func generateCode(length int) (string, error) {
 
 	return string(code), nil
 }
+func isValidURL(rawURL string) bool {
+	if len(rawURL) < 5 || len(rawURL) > 2048 {
+		return false
+	}
+
+	u, err := url.ParseRequestURI(rawURL)
+	if err != nil {
+		return false
+	}
+
+	if u.Scheme == "" || u.Host == "" {
+		return false
+	}
+
+	switch u.Scheme {
+	case "http", "https":
+		return true
+	}
+	return false
+}
+
 func (h *URLHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		URL string `json:"url"`
@@ -45,7 +67,19 @@ func (h *URLHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		http.Error(w, "Invalid JSON", http.StatusBadRequest)
+		http.Error(w, "Invalid JSON", http.StatusUnsupportedMediaType)
+		return
+	}
+
+	// Validate the URL
+	if req.URL == "" {
+		http.Error(w, "URL is required", http.StatusNotAcceptable)
+		return
+	}
+
+	// Validate the URL format (basic validation)
+	if !isValidURL(req.URL) {
+		http.Error(w, "Invalid URL format", http.StatusNotAcceptable)
 		return
 	}
 

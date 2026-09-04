@@ -1,0 +1,48 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: url-shortener-api
+
+    ports:
+      - "127.0.0.1:8080:8080"
+
+    environment:
+      DATABASE_URL: postgres://urluser:urlpassword@postgres:5432/urlshortener?sslmode=disable
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - app
+
+  postgres:
+    image: postgres:17
+
+    container_name: url-shortener-postgres
+
+    environment:
+      POSTGRES_DB: urlshortener
+      POSTGRES_USER: urluser
+      POSTGRES_PASSWORD: urlpassword
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - app
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U urluser -d urlshortener"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  app:
+
+volumes:
+  postgres_data:
