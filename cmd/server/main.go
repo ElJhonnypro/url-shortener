@@ -40,16 +40,24 @@ func main() {
 	defer repository.Close()
 	service := service.NewURLService(repository, log)
 	handler := handler.NewURLHandler(service, log)
-	router := httprouter.NewRouter(handler)
 
-	rateLimiter := middleware.NewRateLimiter(
+	createLimiter := middleware.NewRateLimiter(
 		10,
 		time.Minute,
 	)
 
-	rateLimitedRouter := rateLimiter.Middleware(router)
+	redirectLimiter := middleware.NewRateLimiter(
+		60,
+		time.Minute,
+	)
 
-	cors := middleware.CORS(rateLimitedRouter)
+	router := httprouter.NewRouter(
+		handler,
+		createLimiter,
+		redirectLimiter,
+	)
+
+	cors := middleware.CORS(router)
 
 	server := http.Server{
 		Addr:    ":8080",

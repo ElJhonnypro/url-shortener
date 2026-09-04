@@ -22,6 +22,23 @@ type RateLimiter struct {
 	window time.Duration
 }
 
+func getIP(r *http.Request) string {
+	// Preferir la IP real enviada por Nginx.
+	realIP := strings.TrimSpace(r.Header.Get("X-Real-IP"))
+
+	if realIP != "" && net.ParseIP(realIP) != nil {
+		return realIP
+	}
+
+	// Fallback: IP de la conexión directa.
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err == nil {
+		return host
+	}
+
+	return strings.TrimSpace(r.RemoteAddr)
+}
+
 func NewRateLimiter(limit int, window time.Duration) *RateLimiter {
 	return &RateLimiter{
 		clients: make(map[string]client),
@@ -75,15 +92,4 @@ func (rl *RateLimiter) Allow(ip string) bool {
 	rl.clients[ip] = c
 
 	return true
-}
-
-func getIP(r *http.Request) string {
-	// Para desarrollo/local.
-	host, _, err := net.SplitHostPort(r.RemoteAddr)
-	if err == nil {
-		return host
-	}
-
-	// Fallback por si RemoteAddr no contiene puerto.
-	return strings.TrimSpace(r.RemoteAddr)
 }
