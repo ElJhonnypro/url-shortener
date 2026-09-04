@@ -12,6 +12,9 @@ services:
     environment:
       DATABASE_URL: postgres://urluser:urlpassword@postgres:5432/urlshortener?sslmode=disable
 
+    volumes:
+      - ./logs:/app/logs
+
     depends_on:
       postgres:
         condition: service_healthy

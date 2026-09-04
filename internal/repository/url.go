@@ -9,7 +9,6 @@ import (
 
 	logger "github.com/ElJhonnypro/url-shortener-go/internal/logger"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/joho/godotenv"
 )
 
 type URLRepository struct {
@@ -25,8 +24,6 @@ func NewURLRepository(log *logger.Logger) *URLRepository {
 }
 
 func (r *URLRepository) Connect() (bool, error) {
-	_ = godotenv.Load("../.env")
-
 	postgresURL := os.Getenv("POSTGRES_URL")
 	if postgresURL == "" {
 		r.log.Warn("POSTGRES_URL is not set in the environment variables.")
@@ -44,12 +41,16 @@ func (r *URLRepository) Connect() (bool, error) {
 	db.SetConnMaxLifetime(15 * time.Minute)
 
 	query := `CREATE TABLE IF NOT EXISTS urls (
-    code VARCHAR(10) PRIMARY KEY,
-    original_url TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);`
+		code VARCHAR(10) PRIMARY KEY,
+		original_url TEXT NOT NULL,
+		created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+	);`
 
-	db.Exec(query)
+	if _, err := db.Exec(query); err != nil {
+		r.log.Error("Failed to create urls table: " + err.Error())
+		db.Close()
+		return false, fmt.Errorf("failed to create urls table: %w", err)
+	}
 
 	if err := db.Ping(); err != nil {
 		r.log.Error("Failed to ping database: " + err.Error())
@@ -60,6 +61,7 @@ func (r *URLRepository) Connect() (bool, error) {
 	r.database = db
 	r.isDBConnected = true
 	r.log.Info("Connected to the database.")
+
 	return true, nil
 }
 
