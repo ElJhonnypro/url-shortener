@@ -17,5 +17,5 @@ jobs:
 
       - name: Rebuild application
         run: |
-          cd ~/Projects/url-shortner
+          cd ~/Projects/url-shortener
           docker compose up -d --build
