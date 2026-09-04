@@ -12,10 +12,10 @@ jobs:
     steps:
       - name: Update repository
         run: |
-          cd ~/Projects/url-shortner-example
+          cd ~/Projects/url-shortener
           git pull origin main
 
       - name: Rebuild application
         run: |
-          cd ~/Projects/url-shortner-example
+          cd ~/Projects/url-shortner
           docker compose up -d --build
