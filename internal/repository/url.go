@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	logger "github.com/ElJhonnypro/url-shortener-go/internal/logger"
+	logger "github.com/ElJhonnypro/url-shortener/internal/logger"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 

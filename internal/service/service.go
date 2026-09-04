@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/ElJhonnypro/url-shortener-go/internal/logger"
-	"github.com/ElJhonnypro/url-shortener-go/internal/repository"
+	"github.com/ElJhonnypro/url-shortener/internal/logger"
+	"github.com/ElJhonnypro/url-shortener/internal/repository"
 )
 
 type URLService struct {

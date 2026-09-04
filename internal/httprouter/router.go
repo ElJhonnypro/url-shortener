@@ -3,8 +3,8 @@ package httprouter
 import (
 	"net/http"
 
-	"github.com/ElJhonnypro/url-shortener-go/internal/handler"
-	"github.com/ElJhonnypro/url-shortener-go/internal/middleware"
+	"github.com/ElJhonnypro/url-shortener/internal/handler"
+	"github.com/ElJhonnypro/url-shortener/internal/middleware"
 )
 
 func NewRouter(
