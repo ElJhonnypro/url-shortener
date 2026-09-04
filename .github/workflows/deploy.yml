@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [Deployment]
+
+    steps:
+      - name: Update repository
+        run: |
+          cd ~/Projects/url-shortner-example
+          git pull origin main
+
+      - name: Rebuild application
+        run: |
+          cd ~/Projects/url-shortner-example
+          docker compose up -d --build
