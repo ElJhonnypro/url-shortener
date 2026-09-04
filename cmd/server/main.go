@@ -31,6 +31,13 @@ func main() {
 	)
 
 	repository := repository.NewURLRepository(log)
+
+	if _, err := repository.Connect(); err != nil {
+		log.Error("Database initialization failed: " + err.Error())
+		return
+	}
+
+	defer repository.Close()
 	service := service.NewURLService(repository, log)
 	handler := handler.NewURLHandler(service, log)
 	router := httprouter.NewRouter(handler)
